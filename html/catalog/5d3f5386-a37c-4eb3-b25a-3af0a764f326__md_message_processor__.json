@@ -1,0 +1,16 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "players_json"
+        }
+    },
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "neededplayers"
+        }
+    },
+    "id": "5d3f5386-a37c-4eb3-b25a-3af0a764f326",
+    "version": "5.2.0.0"
+}

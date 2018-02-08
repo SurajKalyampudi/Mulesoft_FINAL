@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd
+http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="Welcome123" database="orchard" doc:name="MySQL Configuration"/>
+    <flow name="week1Flow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/lol" allowedMethods="get" doc:name="HTTP"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from minds]]></db:parameterized-query>
+        </db:select>
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="week1Flow2">
+        <composite-source doc:name="Composite Source">
+            <http:listener config-ref="HTTP_Listener_Configuration" path="/Cs" allowedMethods="post" doc:name="HTTP"/>
+            <ftp:inbound-endpoint host="localhost" port="21" path="D:\Source" user="M1043089" password="Bangalore7$" passive="false" responseTimeout="10000" doc:name="FTP"/>
+        </composite-source>
+        <logger level="INFO" doc:name="Logger"/>
+        <ftp:outbound-endpoint host="localhost" port="21" path="D:\Destination" user="M1043089" password="Bangalore7$" passive="false" responseTimeout="10000" doc:name="FTP"/>
+    </flow>
+</mule>

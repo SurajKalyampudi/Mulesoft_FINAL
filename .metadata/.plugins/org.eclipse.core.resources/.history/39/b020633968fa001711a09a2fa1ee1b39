@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" host="api.football-data.org" port="80" doc:name="HTTP Request Configuration">
+        <http:proxy host="172.17.2.218" port="8085" username="m1043089" password="Elephant7$"/>
+    </http:request-config>
+    <flow name="htmlFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/main" doc:name="HTTP"/>
+        <parse-template location="D:\HTML pages\register.html" doc:name="Parse Template"/>
+    </flow>
+    <flow name="choiceFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+        <set-variable variableName="team" value="#[payload.name]" doc:name="Tname"/>
+        <choice doc:name="Choice"/>
+    </flow>
+    <flow name="ChelseaPlayers">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/chelsea" doc:name="HTTP"/>
+        <set-variable variableName="team" value="#[payload.name]" doc:name="TeamName"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.team==&quot;chelsea&quot;]">
+                <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/61/players" method="GET" doc:name="HTTP"/>
+                <dw:transform-message doc:name="Transform Message" metadata:id="86020e6b-50a0-47af-bd87-5be81612a836">
+                    <dw:input-payload mimeType="application/json"/>
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+                </dw:transform-message>
+            </when>
+            <when expression="#[flowVars.team=&quot;liverpool&quot;]">
+                <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/64/players" method="get" doc:name="HTTP"/>
+                <dw:transform-message doc:name="Transform Message" metadata:id="62955355-ab1c-4aa2-9337-2aeb392b4c2a">
+                    <dw:input-payload mimeType="application/json"/>
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+                </dw:transform-message>
+            </when>
+            <when expression="#[flowVars.team==&quot;manutd&quot;]">
+                <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/67/players" method="GET" doc:name="HTTP"/>
+                <dw:transform-message doc:name="Transform Message" metadata:id="8642b429-f296-4963-a548-bf66f8aaa9a1">
+                    <dw:input-payload mimeType="application/json"/>
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+                </dw:transform-message>
+            </when>
+            <when expression="#[flowVars.team==&quot;mancity&quot;]">
+                <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/65/players" method="GET" doc:name="HTTP"/>
+                <dw:transform-message doc:name="Transform Message" metadata:id="acda61e7-d191-446e-b6ef-b70924ae1167">
+                    <dw:input-payload mimeType="application/json"/>
+                    <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+                </dw:transform-message>
+            </when>
+            <otherwise>
+                <set-payload value="BRO.." doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="CFC">
+        <http:request config-ref="HTTP_Request_Configuration" path="" method="" doc:name="chelseaPlayers"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+</mule>

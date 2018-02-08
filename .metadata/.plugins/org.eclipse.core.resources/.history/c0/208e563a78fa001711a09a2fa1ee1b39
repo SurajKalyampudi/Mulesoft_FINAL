@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" host="api.football-data.org" port="80" doc:name="HTTP Request Configuration">
+        <http:proxy host="172.17.2.218" port="8085" username="m1043089" password="Elephant7$"/>
+    </http:request-config>
+    <flow name="htmlFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/main" doc:name="HTTP"/>
+        <parse-template location="D:\HTML pages\Homepage.html" doc:name="Parse Template"/>
+    </flow>
+    <flow name="homepage">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/homepage" doc:name="HTTP"/>
+        <set-variable variableName="choice" value="#[payload.name]" doc:name="choice"/>
+        <logger message="#[payload.name]" level="INFO" doc:name="Logger"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.choice==&quot;fixtures&quot;]">
+                <flow-ref name="prefixutres" doc:name="prefixutres"/>
+            </when>
+            <when expression="#[flowVars.choice==&quot;players&quot;]">
+                <flow-ref name="preplayers" doc:name="Flow Reference"/>
+            </when>
+            <otherwise>
+                <set-payload value="#[payload.name]" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="prefixutres">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/fix" doc:name="HTTP"/>
+        <parse-template location="D:\HTML pages\fixtures.html" doc:name="Parse Template"/>
+        <flow-ref name="Fixtures" doc:name="Fixtures"/>
+    </flow>
+    <flow name="preplayers">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/players" doc:name="HTTP"/>
+        <parse-template location="D:\HTML pages\register.html" doc:name="Parse Template"/>
+        <flow-ref name="players" doc:name="players"/>
+    </flow>
+    <flow name="Fixtures">
+        <set-variable variableName="team_fixture" value="#[payload.name]" doc:name="Variable"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.team_fixture==&quot;chelsea&quot;]">
+                <flow-ref name="chelseafixtures" doc:name="Flow Reference"/>
+            </when>
+            <when expression="#[flowVars.team_fixture==&quot;liverpool&quot;]">
+                <flow-ref name="Liverpoolfixtures" doc:name="Flow Reference"/>
+            </when>
+            <when expression="#[flowVars.team_fixture==&quot;mancity&quot;]">
+                <flow-ref name="ManCityfixtures" doc:name="ManCityfixtures"/>
+            </when>
+            <when expression="#[flowVars.team_fixture==&quot;manutd&quot;]">
+                <flow-ref name="ManUtdFixtures" doc:name="Flow Reference"/>
+            </when>
+            <otherwise>
+                <set-payload value="Sorry team data doesn't exist!!" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="players">
+        <set-variable variableName="team" value="#[payload.name]" doc:name="Tname"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.team==&quot;chelsea&quot;]">
+                <flow-ref name="CFC" doc:name="chelsea"/>
+            </when>
+            <when expression="#[flowVars.team==&quot;liverpool&quot;]">
+                <flow-ref name="LIV" doc:name="Liverpool"/>
+            </when>
+            <when expression="#[flowVars.team==&quot;manutd&quot;]">
+                <flow-ref name="UTD" doc:name="man utd"/>
+            </when>
+            <when expression="#[flowVars.team==&quot;mancity&quot;]">
+                <flow-ref name="CITY" doc:name="city"/>
+            </when>
+            <otherwise>
+                <set-payload value="Team you entered is #[flowVars.team] and its not present" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="CFC">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/61/players" method="GET" doc:name="chelseaPlayers"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="5d3f5386-a37c-4eb3-b25a-3af0a764f326">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="LIV">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/64/players" method="GET" doc:name="liverpoolPlayers"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="0dd3546a-3798-4a50-8a75-ceaa437c1f69">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="UTD">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/66/players" method="GET" doc:name="ManUtdPlayers"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="b863e0c0-644b-4571-a016-8e30d4ba6daf">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="CITY">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/65/players" method="GET" doc:name="ManCityPlayers"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="e90e5eba-e938-45d2-bc57-14c645d341cb">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	players: payload.players map ((player , indexOfPlayer) -> {
+		name: player.name,
+		position: player.position,
+		jerseyNumber: player.jerseyNumber,
+		dateOfBirth: player.dateOfBirth,
+		nationality: player.nationality,
+		contractUntil: player.contractUntil,
+		marketValue: player.marketValue
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="chelseafixtures">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/61/fixtures" method="GET" doc:name="chelsea fixtures"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="7c014410-496c-4f3c-9ad3-293384a8dd5f">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	fixtures: payload.fixtures map ((fixture , indexOfFixture) -> {
+		date: fixture.date,
+		status: fixture.status,
+		matchday: fixture.matchday,
+		homeTeamName: fixture.homeTeamName,
+		awayTeamName: fixture.awayTeamName,
+		result: fixture.result
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="Liverpoolfixtures">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/64/fixtures" method="GET" doc:name="Liverpool fixtures"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="f1bced68-e917-4fd9-abdc-69961a9413b1">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	fixtures: payload.fixtures map ((fixture , indexOfFixture) -> {
+		date: fixture.date,
+		status: fixture.status,
+		matchday: fixture.matchday,
+		homeTeamName: fixture.homeTeamName,
+		awayTeamName: fixture.awayTeamName,
+		result: fixture.result
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="ManUtdFixtures">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/66/fixtures" method="GET" doc:name="ManUtdfixtures"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="ff6ac732-f83e-44ad-8295-5599be9e8f07">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	fixtures: payload.fixtures map ((fixture , indexOfFixture) -> {
+		date: fixture.date,
+		status: fixture.status,
+		matchday: fixture.matchday,
+		homeTeamName: fixture.homeTeamName,
+		awayTeamName: fixture.awayTeamName,
+		result: fixture.result
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="ManCityfixtures">
+        <http:request config-ref="HTTP_Request_Configuration" path="/v1/teams/65/fixtures" method="GET" doc:name="cityfixtures"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="15a223e0-4e45-4c8a-91f5-9cf29bc724ee">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	fixtures: payload.fixtures map ((fixture , indexOfFixture) -> {
+		date: fixture.date,
+		status: fixture.status,
+		matchday: fixture.matchday,
+		homeTeamName: fixture.homeTeamName,
+		awayTeamName: fixture.awayTeamName,
+		result: fixture.result
+	})
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+</mule>

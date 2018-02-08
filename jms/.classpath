@@ -1,0 +1,23 @@
+<classpath>
+  <classpathentry kind="src" path="src/main/api" excluding="**/*.java"/>
+  <classpathentry kind="src" path="src/main/app" excluding="**/*.java"/>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes"/>
+  <classpathentry kind="src" path="src/test/resources" output="target/test-classes" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="MULE_RUNTIME"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/activemq/activemq-all/5.8.0/activemq-all-5.8.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/activemq/activemq-amqp/5.8.0/activemq-amqp-5.8.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/activemq/activemq-broker/5.8.0/activemq-broker-5.8.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/activemq/activemq-client/5.8.0/activemq-client-5.8.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/activemq/activemq-openwire-legacy/5.8.0/activemq-openwire-legacy-5.8.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcpkix-jdk15on/1.47/bcpkix-jdk15on-1.47.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/bouncycastle/bcprov-jdk15on/1.47/bcprov-jdk15on-1.47.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/fusesource/hawtbuf/hawtbuf/1.9/hawtbuf-1.9.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/qpid/proton/0.3.0-fuse-2/proton-0.3.0-fuse-2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/qpid/proton-api/0.3.0-fuse-2/proton-api-0.3.0-fuse-2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/qpid/proton-jms/0.3.0-fuse-2/proton-jms-0.3.0-fuse-2.jar"/>
+</classpath>

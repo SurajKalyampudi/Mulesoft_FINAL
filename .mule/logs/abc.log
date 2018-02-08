@@ -1,0 +1,190 @@
+2018-01-22 15:09:33,347 [main] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Initializing app 'abc'                                   +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:09:33,500 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising RegistryBroker
+2018-01-22 15:09:33,589 [main] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Starting discovery of extensions
+2018-01-22 15:09:33,680 [main] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Discovered 1 extensions
+2018-01-22 15:09:33,680 [main] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Registering extension validation (version 3.8)
+2018-01-22 15:09:33,721 [main] INFO  org.mule.config.spring.MuleArtifactContext - Refreshing org.mule.config.spring.MuleArtifactContext@780ec4a5: startup date [Mon Jan 22 15:09:33 IST 2018]; root of context hierarchy
+2018-01-22 15:09:34,693 [main] INFO  org.mule.config.spring.processors.NoDevkitInjectorProcessor - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2018-01-22 15:09:35,257 [main] WARN  org.mule.module.ognl.expression.OgnlExpressionEvaluator - OGNL module is deprecated and will be removed in Mule 4.0. Use MEL expressions instead.
+2018-01-22 15:09:35,427 [main] INFO  org.mule.util.journal.TransactionJournal - Using files for tx logs C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-tx-log\tx1.log and C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-tx-log\tx2.log
+2018-01-22 15:09:35,441 [main] INFO  org.mule.util.journal.TransactionJournal - Using files for tx logs C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-xa-tx-log\tx1.log and C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-xa-tx-log\tx2.log
+2018-01-22 15:09:35,447 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising connector: Active_MQ
+2018-01-22 15:09:35,550 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising model: _muleSystemModel
+2018-01-22 15:09:35,555 [main] INFO  org.mule.construct.FlowConstructLifecycleManager - Initialising flow: abcFlow
+2018-01-22 15:09:35,556 [main] INFO  org.mule.exception.DefaultMessagingExceptionStrategy - Initialising exception listener: org.mule.exception.DefaultMessagingExceptionStrategy@7cfb4736
+2018-01-22 15:09:35,572 [main] INFO  org.mule.processor.SedaStageLifecycleManager - Initialising service: abcFlow.stage1
+2018-01-22 15:09:35,881 [main] INFO  org.mule.config.spring.SpringXmlConfigurationBuilder - Configured Mule using "org.mule.config.spring.SpringXmlConfigurationBuilder" with configuration resource(s): "[ConfigResource{resourceName='C:\Users\EAI\AnypointStudio\workspace\.mule\apps\abc\abc.xml'}]"
+2018-01-22 15:09:35,881 [main] INFO  org.mule.config.builders.AutoConfigurationBuilder - Configured Mule using "org.mule.config.builders.AutoConfigurationBuilder" with configuration resource(s): "[ConfigResource{resourceName='C:\Users\EAI\AnypointStudio\workspace\.mule\apps\abc\abc.xml'}]"
+2018-01-22 15:09:39,214 [main] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Starting app 'abc'                                       +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:09:39,218 [main] INFO  org.mule.util.queue.QueueXaResourceManager - Starting ResourceManager
+2018-01-22 15:09:39,218 [main] INFO  org.mule.util.queue.QueueXaResourceManager - Started ResourceManager
+2018-01-22 15:09:39,269 [main] ERROR org.mule.retry.notifiers.ConnectNotifier - Failed to connect/reconnect: ActiveMQJmsConnector
+{
+  name=Active_MQ
+  lifecycle=initialise
+  this=30c4e352
+  numberOfConcurrentTransactedReceivers=4
+  createMultipleTransactedReceivers=true
+  connected=false
+  supportedProtocols=[jms]
+  serviceOverrides=<none>
+}
+. Root Exception was: org.apache.activemq.ActiveMQConnectionFactory. Type: class java.lang.ClassNotFoundException
+2018-01-22 15:09:39,270 [main] ERROR org.mule.module.launcher.application.DefaultMuleApplication - org.apache.activemq.ActiveMQConnectionFactory (java.lang.ClassNotFoundException)
+2018-01-22 15:09:39,273 [main] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Disposing app 'abc'                                      +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:09:39,273 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Disposing RegistryBroker
+2018-01-22 15:09:39,274 [main] INFO  org.mule.construct.FlowConstructLifecycleManager - Disposing flow: abcFlow
+2018-01-22 15:09:39,274 [main] INFO  org.mule.processor.SedaStageLifecycleManager - Disposing service: abcFlow.stage1
+2018-01-22 15:09:39,276 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Disposing model: _muleSystemModel
+2018-01-22 15:09:39,280 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Disposing connector: Active_MQ
+2018-01-22 15:09:39,374 [main] INFO  org.mule.config.spring.MuleArtifactContext - Closing org.mule.config.spring.MuleArtifactContext@780ec4a5: startup date [Mon Jan 22 15:09:33 IST 2018]; root of context hierarchy
+2018-01-22 15:09:39,482 [main] INFO  org.mule.DefaultMuleContext - 
+**********************************************************************
+* Application "abc" shut down normally on: 1/22/18 3:09 PM           *
+* Up for: 0 days, 0 hours, 0 mins, 0.262 sec                         *
+**********************************************************************
+2018-01-22 15:50:07,669 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Initializing app 'abc'                                   +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:50:07,678 [Mule.app.deployer.monitor.1.thread.1] WARN  com.mulesoft.module.client.APIPlatformClientCoreExtension - Client ID or Client Secret were not provided. API Manager client is DISABLED for app abc
+2018-01-22 15:50:07,680 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising RegistryBroker
+2018-01-22 15:50:07,684 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Starting discovery of extensions
+2018-01-22 15:50:07,693 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Discovered 1 extensions
+2018-01-22 15:50:07,694 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Registering extension validation (version 3.8)
+2018-01-22 15:50:07,699 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.config.spring.MuleArtifactContext - Refreshing org.mule.config.spring.MuleArtifactContext@6ad79a: startup date [Mon Jan 22 15:50:07 IST 2018]; root of context hierarchy
+2018-01-22 15:50:07,880 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.config.spring.processors.NoDevkitInjectorProcessor - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2018-01-22 15:50:07,966 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.util.journal.TransactionJournal - Using files for tx logs C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-tx-log\tx1.log and C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-tx-log\tx2.log
+2018-01-22 15:50:07,969 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.util.journal.TransactionJournal - Using files for tx logs C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-xa-tx-log\tx1.log and C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-xa-tx-log\tx2.log
+2018-01-22 15:50:07,973 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising connector: Active_MQ
+2018-01-22 15:50:07,990 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising model: _muleSystemModel
+2018-01-22 15:50:07,994 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.construct.FlowConstructLifecycleManager - Initialising flow: abcFlow
+2018-01-22 15:50:07,994 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.exception.DefaultMessagingExceptionStrategy - Initialising exception listener: org.mule.exception.DefaultMessagingExceptionStrategy@3659a4e9
+2018-01-22 15:50:07,998 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.processor.SedaStageLifecycleManager - Initialising service: abcFlow.stage1
+2018-01-22 15:50:08,054 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.config.spring.SpringXmlConfigurationBuilder - Configured Mule using "org.mule.config.spring.SpringXmlConfigurationBuilder" with configuration resource(s): "[ConfigResource{resourceName='C:\Users\EAI\AnypointStudio\workspace\.mule\apps\abc\abc.xml'}]"
+2018-01-22 15:50:08,054 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.config.builders.AutoConfigurationBuilder - Configured Mule using "org.mule.config.builders.AutoConfigurationBuilder" with configuration resource(s): "[ConfigResource{resourceName='C:\Users\EAI\AnypointStudio\workspace\.mule\apps\abc\abc.xml'}]"
+2018-01-22 15:50:11,063 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Starting app 'abc'                                       +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:50:11,066 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.util.queue.QueueXaResourceManager - Starting ResourceManager
+2018-01-22 15:50:11,066 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.util.queue.QueueXaResourceManager - Started ResourceManager
+2018-01-22 15:50:11,108 [Mule.app.deployer.monitor.1.thread.1] ERROR org.mule.retry.notifiers.ConnectNotifier - Failed to connect/reconnect: ActiveMQJmsConnector
+{
+  name=Active_MQ
+  lifecycle=initialise
+  this=3d2f38ac
+  numberOfConcurrentTransactedReceivers=4
+  createMultipleTransactedReceivers=true
+  connected=false
+  supportedProtocols=[jms]
+  serviceOverrides=<none>
+}
+. Root Exception was: org.apache.activemq.ActiveMQConnectionFactory. Type: class java.lang.ClassNotFoundException
+2018-01-22 15:50:11,108 [Mule.app.deployer.monitor.1.thread.1] ERROR org.mule.module.launcher.application.DefaultMuleApplication - org.apache.activemq.ActiveMQConnectionFactory (java.lang.ClassNotFoundException)
+2018-01-22 15:50:11,108 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Disposing app 'abc'                                      +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:50:11,109 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.lifecycle.AbstractLifecycleManager - Disposing RegistryBroker
+2018-01-22 15:50:11,110 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.construct.FlowConstructLifecycleManager - Disposing flow: abcFlow
+2018-01-22 15:50:11,110 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.processor.SedaStageLifecycleManager - Disposing service: abcFlow.stage1
+2018-01-22 15:50:11,111 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.lifecycle.AbstractLifecycleManager - Disposing model: _muleSystemModel
+2018-01-22 15:50:11,114 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.lifecycle.AbstractLifecycleManager - Disposing connector: Active_MQ
+2018-01-22 15:50:11,139 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.config.spring.MuleArtifactContext - Closing org.mule.config.spring.MuleArtifactContext@6ad79a: startup date [Mon Jan 22 15:50:07 IST 2018]; root of context hierarchy
+2018-01-22 15:50:11,309 [Mule.app.deployer.monitor.1.thread.1] INFO  org.mule.DefaultMuleContext - 
+**********************************************************************
+* Application "abc" shut down normally on: 1/22/18 3:50 PM           *
+* Up for: 0 days, 0 hours, 0 mins, 0.245 sec                         *
+**********************************************************************
+2018-01-22 15:50:36,301 [main] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Initializing app 'abc'                                   +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:50:36,454 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising RegistryBroker
+2018-01-22 15:50:36,542 [main] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Starting discovery of extensions
+2018-01-22 15:50:36,619 [main] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Discovered 1 extensions
+2018-01-22 15:50:36,619 [main] INFO  org.mule.module.extension.internal.manager.DefaultExtensionManager - Registering extension validation (version 3.8)
+2018-01-22 15:50:36,661 [main] INFO  org.mule.config.spring.MuleArtifactContext - Refreshing org.mule.config.spring.MuleArtifactContext@3d3f761a: startup date [Mon Jan 22 15:50:36 IST 2018]; root of context hierarchy
+2018-01-22 15:50:37,685 [main] INFO  org.mule.config.spring.processors.NoDevkitInjectorProcessor - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2018-01-22 15:50:38,247 [main] WARN  org.mule.module.ognl.expression.OgnlExpressionEvaluator - OGNL module is deprecated and will be removed in Mule 4.0. Use MEL expressions instead.
+2018-01-22 15:50:38,414 [main] INFO  org.mule.util.journal.TransactionJournal - Using files for tx logs C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-tx-log\tx1.log and C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-tx-log\tx2.log
+2018-01-22 15:50:38,426 [main] INFO  org.mule.util.journal.TransactionJournal - Using files for tx logs C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-xa-tx-log\tx1.log and C:\Users\EAI\AnypointStudio\workspace\.mule\.\.mule\abc\queue-xa-tx-log\tx2.log
+2018-01-22 15:50:38,432 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising connector: Active_MQ
+2018-01-22 15:50:38,532 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising model: _muleSystemModel
+2018-01-22 15:50:38,535 [main] INFO  org.mule.construct.FlowConstructLifecycleManager - Initialising flow: abcFlow
+2018-01-22 15:50:38,536 [main] INFO  org.mule.exception.DefaultMessagingExceptionStrategy - Initialising exception listener: org.mule.exception.DefaultMessagingExceptionStrategy@5d342959
+2018-01-22 15:50:38,551 [main] INFO  org.mule.processor.SedaStageLifecycleManager - Initialising service: abcFlow.stage1
+2018-01-22 15:50:38,863 [main] INFO  org.mule.config.spring.SpringXmlConfigurationBuilder - Configured Mule using "org.mule.config.spring.SpringXmlConfigurationBuilder" with configuration resource(s): "[ConfigResource{resourceName='C:\Users\EAI\AnypointStudio\workspace\.mule\apps\abc\abc.xml'}]"
+2018-01-22 15:50:38,863 [main] INFO  org.mule.config.builders.AutoConfigurationBuilder - Configured Mule using "org.mule.config.builders.AutoConfigurationBuilder" with configuration resource(s): "[ConfigResource{resourceName='C:\Users\EAI\AnypointStudio\workspace\.mule\apps\abc\abc.xml'}]"
+2018-01-22 15:50:41,899 [main] INFO  org.mule.module.launcher.application.DefaultMuleApplication - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Starting app 'abc'                                       +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:50:41,903 [main] INFO  org.mule.util.queue.QueueXaResourceManager - Starting ResourceManager
+2018-01-22 15:50:41,903 [main] INFO  org.mule.util.queue.QueueXaResourceManager - Started ResourceManager
+2018-01-22 15:50:42,580 [main] INFO  org.mule.transport.jms.activemq.ActiveMQJmsConnector - Connected: ActiveMQJmsConnector
+{
+  name=Active_MQ
+  lifecycle=initialise
+  this=2e3572e8
+  numberOfConcurrentTransactedReceivers=4
+  createMultipleTransactedReceivers=true
+  connected=true
+  supportedProtocols=[jms]
+  serviceOverrides=<none>
+}
+
+2018-01-22 15:50:42,580 [main] INFO  org.mule.transport.jms.activemq.ActiveMQJmsConnector - Starting: ActiveMQJmsConnector
+{
+  name=Active_MQ
+  lifecycle=initialise
+  this=2e3572e8
+  numberOfConcurrentTransactedReceivers=4
+  createMultipleTransactedReceivers=true
+  connected=true
+  supportedProtocols=[jms]
+  serviceOverrides=<none>
+}
+
+2018-01-22 15:50:42,581 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Starting connector: Active_MQ
+2018-01-22 15:50:42,583 [main] INFO  org.mule.modules.oauth2.provider.agents.DefaultSplashScreenAgent - 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ DevKit Extensions (0) used in this application 
+                             +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2018-01-22 15:50:42,584 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Starting model: _muleSystemModel
+2018-01-22 15:50:42,585 [main] INFO  org.mule.construct.FlowConstructLifecycleManager - Starting flow: abcFlow
+2018-01-22 15:50:42,586 [main] INFO  org.mule.processor.SedaStageLifecycleManager - Starting service: abcFlow.stage1
+2018-01-22 15:50:42,614 [main] INFO  org.mule.transport.jms.activemq.ActiveMQJmsConnector - Registering listener: abcFlow on endpointUri: jms://chelsea
+2018-01-22 15:50:42,621 [main] INFO  org.mule.transport.service.DefaultTransportServiceDescriptor - Loading default inbound transformer: org.mule.transport.jms.transformers.JMSMessageToObject
+2018-01-22 15:50:42,622 [main] INFO  org.mule.transport.service.DefaultTransportServiceDescriptor - Loading default response transformer: org.mule.transport.jms.transformers.ObjectToJMSMessage
+2018-01-22 15:50:42,624 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Initialising: 'null'. Object is: MultiConsumerJmsMessageReceiver
+2018-01-22 15:50:42,625 [main] INFO  org.mule.transport.jms.MultiConsumerJmsMessageReceiver - Connecting clusterizable message receiver
+2018-01-22 15:50:42,666 [main] INFO  org.mule.transport.jms.MultiConsumerJmsMessageReceiver - Endpoint jms://chelsea has been successfully reconnected.
+2018-01-22 15:50:42,667 [main] INFO  org.mule.lifecycle.AbstractLifecycleManager - Starting: 'null'. Object is: MultiConsumerJmsMessageReceiver
+2018-01-22 15:50:42,667 [main] INFO  org.mule.transport.jms.MultiConsumerJmsMessageReceiver - Starting clusterizable message receiver
+2018-01-22 15:50:42,674 [main] INFO  org.mule.module.management.agent.WrapperManagerAgent - This JVM hasn't been launched by the wrapper, the agent will not run.
+2018-01-22 15:50:42,688 [main] INFO  org.mule.module.management.agent.AbstractJmxAgent - Attempting to register service with name: Mule.abc:type=Endpoint,service="abcFlow",connector=Active_MQ,name="endpoint.jms.chelsea"
+2018-01-22 15:50:42,689 [main] INFO  org.mule.module.management.agent.AbstractJmxAgent - Registered Endpoint Service with name: Mule.abc:type=Endpoint,service="abcFlow",connector=Active_MQ,name="endpoint.jms.chelsea"
+2018-01-22 15:50:42,690 [main] INFO  org.mule.module.management.agent.AbstractJmxAgent - Registered Connector Service with name Mule.abc:type=Connector,name="Active_MQ"
+2018-01-22 15:50:42,692 [main] INFO  org.mule.DefaultMuleContext - 
+**********************************************************************
+* Application: abc                                                   *
+* OS encoding: \, Mule encoding: UTF-8                               *
+*                                                                    *
+* Agents Running:                                                    *
+*   Batch module default engine                                      *
+*   JMX Agent                                                        *
+*   DevKit Extension Information                                     *
+*   Wrapper Manager                                                  *
+**********************************************************************

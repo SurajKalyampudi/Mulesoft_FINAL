@@ -1,0 +1,91 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/64d10bed-3a0a-455a-830d-dd99de456fac # 
+version: 1.0
+title: Orchard_NEW
+
+/Orchard:
+  /minds:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+                {
+                  "m_id": 1,
+                  "m_name":"Suraj",
+                  "l_id":1
+                  }
+    post:
+      body: 
+        application/json:
+          example: |
+            {
+            "m_id":1,
+            "m_name":"Suraj",
+            "l_id":1
+            }
+      responses: 
+        201:
+          body: 
+            application/json:
+              example:
+                 {
+                  "message":"Data Added but not really!"
+                 }
+              
+  /leads:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+                {
+                  "l_id":1,
+                  "l_name":"Messi",
+                  "t_id":1
+                  }
+    post:
+      body: 
+        application/json:
+          example: |
+           {
+            "l_id":1,
+            "l_name":"Messi",
+            "t_id":1
+            }              
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: |
+                {
+                  "l_id":1,
+                  "l_name":"Messi",
+                  "t_id":1
+                  }
+  /track:
+    get:
+      responses: 
+        200:
+          body: 
+              application/json:
+                example: |
+                 {
+                   "t_id":1,
+                   "t_name":"EAI"
+                   }
+    post:
+      queryParameters: 
+        track_id:
+        track_name:
+      responses:
+        201:
+         body: 
+           application/json:
+              example: |
+               {
+                 "message":"Inserted Successfully" 
+                 }
+                         

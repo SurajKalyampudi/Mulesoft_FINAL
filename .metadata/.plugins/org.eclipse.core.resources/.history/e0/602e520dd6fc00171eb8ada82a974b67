@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd">
+    <http:request-config name="HTTP_Request_Configuration" host="mu.mulesoft-training.com" port="80" doc:name="HTTP Request Configuration">
+        <http:proxy host="172.17.2.218" port="8085" username="m1043089" password="Bangalore7$"/>
+    </http:request-config>
+    <http:listener-config name="Rest_HTTP_Listener" host="0.0.0.0" port="8082" doc:name="HTTP Listener Configuration"/>
+    <http:listener-config name="Soap_Config" host="0.0.0.0" port="8091" doc:name="HTTP Listener Configuration"/>
+    <ws:consumer-config name="Web_Service_Consumer" wsdlLocation="http://mu.mulesoft-training.com/essentials/delta?wsdl" service="TicketServiceService" port="TicketServicePort" serviceAddress="http://training-u.cloudhub.io/essentials/delta" connectorConfig="HTTP_Request_Configuration" doc:name="Web Service Consumer"/>
+    <payload-type-filter expectedType="java.util.List" name="Payload" doc:name="Payload"/>
+    <flow name="ExcepStrategy">
+        <http:listener config-ref="flights-httpListenerConfig" path="/flights" doc:name="HTTP"/>
+        <flow-ref name="setCodeVariable" doc:name="setCodeVariable"/>
+        <set-variable variableName="airline" value="#[message.inboundProperties.'http.query.params'.airline]" doc:name="Airline"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.airline ==&quot;united&quot;]">
+                <flow-ref name="UnitedFlights" doc:name="UnitedFlights"/>
+            </when>
+            <when expression="#[flowVars.airline ==&quot;Delta&quot;]">
+                <flow-ref name="DeltaFlights" doc:name="DeltaFlights"/>
+            </when>
+            <otherwise>
+                <flow-ref name="GetAllFlights" doc:name="GetAllFlights"/>
+            </otherwise>
+        </choice>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="UnitedFlights">
+        <http:listener config-ref="flights-httpListenerConfig" path="/rest" doc:name="HTTP"/>
+        <flow-ref name="setCodeVariable" doc:name="setCodeVariable"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/essentials/united/flights/{destination}" method="GET" doc:name="United REST Request">
+            <http:request-builder>
+                <http:uri-param paramName="destination" value="#[flowVars.code]"/>
+            </http:request-builder>
+        </http:request>
+        <dw:transform-message doc:name="Transform Message" metadata:id="589727e6-ff51-47e0-a6cd-dc748a899a22">
+            <dw:input-payload mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+%namespace ns0 http://soap.training.mulesoft.com/
+---
+payload
+
+
+]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="setCodeVariable">
+        <set-variable variableName="code" value="#[message.inboundProperties.'http.query.params'.code]" doc:name="Variable"/>
+    </flow>
+    <flow name="DeltaFlights">
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+%namespace ns0 http://soap.training.mulesoft.com/
+---
+{
+	ns0#findFlight: {
+		destination: flowVars.code as :string
+	}
+}]]></dw:set-payload>
+        </dw:transform-message>
+
+        <ws:consumer config-ref="Web_Service_Consumer" operation="findFlight" doc:name="Delta Flights"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="ca99c129-09d9-409b-881b-1e26c905d3bc">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+%namespace ns0 http://soap.training.mulesoft.com/
+---
+payload.ns0#findFlightResponse.*return map ((return , indexOfReturn) -> {
+	airline: return.airlineName,
+	flightCode: return.code,
+	fromAirportCode: return.origin,
+	toAirportCode: return.destination,
+	departureDate: return.departureDate,
+	emptySeats: return.emptySeats,
+	price: return.price,
+	planeType: return.planeType
+})]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+        <exception-strategy ref="CustomChoiceExceptionStrategy" doc:name="Reference Exception Strategy"/>
+        
+    </flow>
+    <flow name="GetAllFlights">
+        <scatter-gather doc:name="Scatter-Gather">
+            <processor-chain>
+                <flow-ref name="UnitedFlights" doc:name="UnitedFlights"/>
+                <filter ref="Payload" doc:name="Filter Reference"/>
+            </processor-chain>
+            <processor-chain>
+                <flow-ref name="DeltaFlights" doc:name="DeltaFlights"/>
+                <filter ref="Payload" doc:name="Filter Reference"/>
+            </processor-chain>
+        </scatter-gather>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+flatten payload]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+
+</mule>

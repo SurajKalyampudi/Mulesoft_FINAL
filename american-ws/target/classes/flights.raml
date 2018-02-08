@@ -1,0 +1,81 @@
+#%RAML 1.0
+baseUri: http://localhost/8081 # 
+title: flights
+version: 1.0
+/flights:
+  get:
+    responses: 
+      200:
+        body: 
+          application/json:
+            example: |
+             {
+                "airline": "United",
+                "flightCode": "ER38sd",
+                "fromAirportCode": "LAX",
+                "toAirportCode": "SFO",
+                "departureDate": "May 21, 2016",
+                "emptySeats": 0,
+                "totalSeats": 200,
+                "price": 199,
+                "planeType": "Boeing 737"
+              }
+             
+  post:
+       body: 
+         application/json:
+           example: | 
+               {
+                  "airline": "United",
+                  "flightCode": "ER38sd",
+                  "fromAirportCode": "LAX",
+                  "toAirportCode": "SFO",
+                  "departureDate": "May 21, 2016",
+                  "emptySeats": 0,
+                  "totalSeats": 200,
+                  "price": 199,
+                  "planeType": "Boeing 737"
+                }
+ 
+       
+  /{ID}:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+               
+               {
+                  "id":1,
+                  "airline": "United",
+                  "flightCode": "ER38sd",
+                  "fromAirportCode": "LAX",
+                  "toAirportCode": "SFO",
+                  "departureDate": "May 21, 2016",
+                  "emptySeats": 0,
+                  "totalSeats": 200,
+                  "price": 199,
+                  "planeType": "Boeing 737"
+                }
+                 
+    post:
+      body: 
+        application/json:
+          example: |
+            {
+                  "airline": "United",
+                  "flightCode": "ER38sd",
+                  "fromAirportCode": "LAX",
+                  "toAirportCode": "SFO",
+                  "departureDate": "May 21, 2016",
+                  "emptySeats": 0,
+                  "totalSeats": 200,
+                  "price": 199,
+                  "planeType": "Boeing 737"
+                }
+                         
+    delete:
+  
+      
+        

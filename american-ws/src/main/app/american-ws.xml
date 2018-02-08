@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+    <db:mysql-config name="MySQL_Configuration" host="${db.host}" port="${db.port}" user="${db.user}" password="welcome123" database="${db.database}" doc:name="MySQL Configuration"/>
+    <flow name="american-getAllflights">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from flights;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="DeleteflightbyId">
+        <db:delete config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[delete from flights where id=#[flowVars.ID]]]></db:parameterized-query>
+        </db:delete>
+    </flow>
+    <flow name="getFlightById">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from flights where id=#[flowVars.idd]]]></db:parameterized-query>
+        </db:select>
+    </flow>
+    <flow name="american-PostAllFlights">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into flights (destination,emptySeats,origin,planeType,price,airline,totalSeats,code,departureDate)
+values (#[json:toAirportCode],#[json:emptySeats],#[json:fromAirportCode],#[json:planeType],#[json:price],
+#[json:airline],#[json:totalSeats],#[json:flightCode],#[json:departureDate]);]]></db:parameterized-query>
+        </db:insert>
+        <set-payload value="&quot;Data inserted Successfully!!!!&quot;" doc:name="Set Payload"/>
+    </flow>
+    <flow name="postById">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into flights (destination,emptySeats,origin,planeType,price,id,airline,totalSeats,code,departureDate)
+values (#[json:toAirportCode],#[json:emptySeats],#[json:fromAirportCode],#[json:planeType],#[json:price],
+#[flowVars.ID],#[json:airline],#[json:totalSeats],#[json:flightCode],#[json:departureDate]);]]></db:parameterized-query>
+        </db:insert>
+    </flow>
+</mule>

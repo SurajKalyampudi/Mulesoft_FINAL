@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration"/>
+    <spring:beans>
+        <spring:import resource="classpath:testing.xml"/>
+    </spring:beans>
+    <munit:test name="testing-test-suite-testingFlowTest" description="Test">
+        <mock:when messageProcessor="mule:set-payload" doc:name="Mock">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="SetPayload2"/>
+            </mock:with-attributes>
+            <mock:then-return payload="#['darkKnight']"/>
+        </mock:when>
+        <flow-ref name="testingFlow" doc:name="Flow-ref to testingFlow"/>
+        <munit:assert-payload-equals expectedValue="#[payload]" doc:name="Assert Payload"/>
+    </munit:test>
+    <munit:test name="testing-test-suite-testingFlow1Test" description="Test">
+        <flow-ref name="testingFlow1" doc:name="Flow-ref to testingFlow1"/>
+        <munit:assert-on-equals expectedValue="[{&quot;age&quot;:&quot;27&quot;,&quot;country&quot;:&quot;Belgium&quot;,&quot;name&quot;:&quot;edenHazard&quot;,&quot;id&quot;:1},{&quot;age&quot;:&quot;27&quot;,&quot;country&quot;:&quot;Belgium&quot;,&quot;name&quot;:&quot;edenHazard&quot;,&quot;id&quot;:2},{&quot;age&quot;:&quot;30&quot;,&quot;country&quot;:&quot;Spain&quot;,&quot;name&quot;:&quot;Cesc Fabregas&quot;,&quot;id&quot;:3},{&quot;age&quot;:&quot;40&quot;,&quot;country&quot;:&quot;England&quot;,&quot;name&quot;:&quot;John terry&quot;,&quot;id&quot;:4},{&quot;age&quot;:&quot;29&quot;,&quot;country&quot;:&quot;Brazil&quot;,&quot;name&quot;:&quot;willian&quot;,&quot;id&quot;:5},{&quot;age&quot;:&quot;30&quot;,&quot;country&quot;:&quot;England&quot;,&quot;name&quot;:&quot;Gary Cahill&quot;,&quot;id&quot;:6},{&quot;age&quot;:&quot;22&quot;,&quot;country&quot;:&quot;Denmark&quot;,&quot;name&quot;:&quot;Andres Christensen &quot;,&quot;id&quot;:7}]" actualValue="#[payload]" doc:name="Assert Equal"/>
+    </munit:test>
+    <munit:test name="testing-test-suite-testingFlow2Test" description="Test">
+        <flow-ref name="testingFlow2" doc:name="Flow-ref to testingFlow2"/>
+        <mock:verify-call messageProcessor="mule:flow" doc:name="Verify Call">
+            <mock:with-attributes>
+                <mock:with-attribute name="name" whereValue="call"/>
+            </mock:with-attributes>
+        </mock:verify-call>
+    </munit:test>
+    <munit:test name="testing-test-suite-testingFlow3Test" description="Test">
+        <flow-ref name="testingFlow3" doc:name="Flow-ref to testingFlow3"/>
+    </munit:test>
+</mule>

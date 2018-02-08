@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:schedulers="http://www.mulesoft.org/schema/mule/schedulers" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/schedulers http://www.mulesoft.org/schema/mule/schedulers/current/mule-schedulers.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration-email" host="0.0.0.0" port="2222" doc:name="HTTP Listener Configuration"/>
+    <smtp:gmail-connector name="Gmail" validateConnections="true" doc:name="Gmail"/>
+    <smtp:connector name="SMTP" validateConnections="true" doc:name="SMTP"/>
+    <jms:activemq-connector name="Active_MQ" brokerURL="tcp://localhost:61616" validateConnections="true" doc:name="Active MQ" password="admin" username="admin"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="welcome123" database="cfc" doc:name="MySQL Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" host="localhost" port="7611" doc:name="HTTP Request Configuration"/>
+    <flow name="sendemailFlow">
+        <jms:inbound-endpoint queue="lol" connector-ref="Active_MQ" doc:name="JMS"/>
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="Polling" processingStrategy="synchronous">
+        <poll doc:name="Poll">
+            <fixed-frequency-scheduler frequency="20000"/>
+            <watermark variable="maxwage" default-expression="0" selector="MAX" selector-expression="#[payload.wage]"/>
+            <db:select config-ref="MySQL_Configuration" doc:name="Database">
+                <db:parameterized-query><![CDATA[Select * from chelsea where wage > #[flowVars.maxwage]]]></db:parameterized-query>
+            </db:select>
+        </poll>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <file:outbound-endpoint path="D:\Output" responseTimeout="10000" doc:name="File"/>
+    </flow>
+    <flow name="ForEachBruh">
+        <http:listener config-ref="HTTP_Listener_Configuration-email" path="/for" allowedMethods="post" doc:name="HTTP"/>
+        <json:json-to-object-transformer returnClass="java.lang.Object" doc:name="JSON to Object"/>
+        <set-variable variableName="count" value="#[message.inboundProperties.'http.query.params'.id]" doc:name="choice"/>
+        <set-variable variableName="myvar" value="#[new java.util.ArrayList()]" doc:name="nameList"/>
+        <choice doc:name="Choice">
+            <when expression="#[flowVars.count==1]">
+                <foreach collection="#[payload.chelsea]" doc:name="InsertDatabaseForEachloop">
+                    <logger message="message is : #[payload.player.name]------- counter:#[flowVars.counter] ----------------AGE is #[payload.player.age]------ COUNTRY is #[payload.player.country]" level="INFO" doc:name="Logger"/>
+                    <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+                        <db:parameterized-query><![CDATA[insert into multiple (name,age,country)
+values(#[payload.player.name],#[payload.player.age],#[payload.player.country])]]></db:parameterized-query>
+                    </db:insert>
+                </foreach>
+            </when>
+            <when expression="#[flowVars.count==2]">
+                <foreach collection="#[payload.chelsea]" doc:name="ExpressionForEachLoop">
+                    <logger message="NAME:  #[payload.player.name]  #[&quot;\n&quot;]  AGE:#[payload.player.age] #[&quot;\n&quot;] #[payload.player.country]" level="INFO" doc:name="Logger"/>
+                    <expression-transformer mimeType="application/json" expression="#[flowVars.myvar.add(payload.player.name)]" doc:name="Expression"/>
+                </foreach>
+            </when>
+            <otherwise>
+                <logger message="Guess it didn't work!!!!!" level="INFO" doc:name="Logger"/>
+            </otherwise>
+        </choice>
+        <logger message="the list is bruh   ................#[flowVars.myvar]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="StuffsFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration-email" path="/newlist" doc:name="HTTP"/>
+        <json:json-to-object-transformer returnClass="java.lang.Object" doc:name="JSON to Object"/>
+        <set-variable variableName="MB" value="#[new java.util.ArrayList()]" doc:name="list"/>
+        <foreach collection="#[payload.chelsea]" doc:name="For Each">
+            <logger message="name:  #[payload.player.name]" level="INFO" doc:name="Logger"/>
+            <expression-transformer expression="#[flowVars.MB.add(payload.player.name)]" doc:name="Expression"/>
+        </foreach>
+        <logger message="my list is #[flowVars.MB]" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>

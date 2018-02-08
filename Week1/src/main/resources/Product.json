@@ -1,0 +1,9 @@
+{
+"Name":"Surajk"
+"MID":"M1043089"
+"Hobbies":"Batman"
+"Something":"Yeah!"
+"Broke":"Soul"
+
+"required": ["MID", "Name"]
+}

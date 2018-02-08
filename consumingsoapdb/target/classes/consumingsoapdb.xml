@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:ws="http://www.mulesoft.org/schema/mule/ws" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/current/mule-ws.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+    <http:listener-config name="week5" host="0.0.0.0" port="5667" doc:name="HTTP Listener Configuration"/>
+    <ws:consumer-config name="Web_Service_Consumer" wsdlLocation="http://localhost:8011/SOAP/Crud?wsdl" service="SoapServicesService" port="SoapServicesPort" serviceAddress="http://localhost:8011/SOAP/Crud" doc:name="Web Service Consumer"/>
+    <flow name="consumingsoapdbFlow">
+        <http:listener config-ref="week5" path="/SoapNew" doc:name="HTTP"/>
+        <ws:consumer config-ref="Web_Service_Consumer" operation="AllMessages" doc:name="Web Service Consumer"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="bfabfe5b-d634-48e7-9d1a-b1fe50a81ea9">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+%namespace ns0 http://DarkKnight.BruceWayne.com/
+---
+payload.ns0#AllMessagesResponse.return]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+</mule>

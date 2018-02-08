@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="Welcome123" database="orchard" doc:name="MySQL Configuration"/>
+    <flow name="choicedbFlow">
+        <http:listener config-ref="Week4" path="/choiceDB" doc:name="HTTP"/>
+        <set-variable variableName="dept" value="#[message.inboundProperties.'http.query.params'.dept]" doc:name="Variable"/>
+        <choice doc:name="Choice">
+            <when expression="flowVars.dept== &quot;lead&quot;">
+                <flow-ref name="getLeads" doc:name="getLeads"/>
+            </when>
+            <when expression="flowVars.dept== &quot;track&quot;">
+                <flow-ref name="getTrack" doc:name="getTrack"/>
+            </when>
+            <when expression="flowVars.dept== &quot;minds&quot;">
+                <flow-ref name="getLeads" doc:name="getLeads"/>
+            </when>
+            <when expression="">
+                <flow-ref name="getLeads" doc:name="getLeads"/>
+            </when>
+            <otherwise>
+                <set-payload value="#[empty]" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <validation:is-not-empty message="&quot;Payload Empty&quot;" value="#[payload]" doc:name="Validation"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+payload ]]></dw:set-payload>
+        </dw:transform-message>
+        <catch-exception-strategy doc:name="No_Table_Exception">
+            <set-payload value="&quot;Table Does no Exist!!!&quot;" doc:name="Set Payload"/>
+            <set-property propertyName="http.status" value="500" doc:name="Property"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="getMinds">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from minds;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="getLeads">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from lead;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="getTrack">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="getEntireDB">
+        <scatter-gather doc:name="Scatter-Gather">
+            <flow-ref name="getLeads" doc:name="getLeads"/>
+            <flow-ref name="getMinds" doc:name="getminds"/>
+            <flow-ref name="getTrack" doc:name="getTrack"/>
+        </scatter-gather>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+flatten payload]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+    <flow name="choicedbFlow1">
+        <http:listener config-ref="Week4" path="/flights" allowedMethods="post" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="23d6b5f4-72e2-433b-993f-0960c38ecc23">
+            <dw:input-payload doc:sample="C:\Users\M1043089\Downloads\MUFundamentals3.9_studentFiles\MUFundamentals3.9_studentFiles\examples\flights-example.json" mimeType="application/json"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+---
+data : {
+	hub:"MUA",
+	flight : {
+	Destination:payload.toAirportCode
+	}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>

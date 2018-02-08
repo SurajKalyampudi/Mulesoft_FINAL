@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8012" basePath="/Orchard" doc:name="HTTP Listener Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration1" host="0.0.0.0" port="8989" basePath="/Orchard" doc:name="HTTP Listener Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" password="Welcome123" database="orchard" doc:name="MySQL Configuration"/>
+    <db:mysql-config name="MySQL_Configuration1" host="localhost" port="3306" user="root" password="Welcome123" database="orchard" doc:name="MySQL Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration2" host="0.0.0.0" port="8011" basePath="/orchard" doc:name="HTTP Listener Configuration"/>
+    <flow name="getMinds">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from minds;]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="PostMinds">
+        <db:insert config-ref="MySQL_Configuration1" doc:name="Database">
+            <db:parameterized-query><![CDATA[Insert into minds (m_id,m_name,l_id) values(#[json:m_id],#[json:m_name],#[json:l_id])]]></db:parameterized-query>
+        </db:insert>
+    </flow>
+    <flow name="GetLeads">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[Select * from lead]]></db:parameterized-query>
+        </db:select>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="postLeads">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into lead(l_id,l_name,t_id) values(#[json:l_id],#[json:l_name],#[json:t_id])]]></db:parameterized-query>
+        </db:insert>
+    </flow>
+    <flow name="getTracks">
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[select * from track]]></db:parameterized-query>
+        </db:select>
+    </flow>
+    <flow name="PostTracks">
+        <db:insert config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into track(t_id,t_name) values(#[message.inboundProperties.'http.query.params'.track_id],#[message.inboundProperties.'http.query.params'.track_name])]]></db:parameterized-query>
+        </db:insert>
+    </flow>
+</mule>

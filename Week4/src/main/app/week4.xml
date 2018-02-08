@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <http:listener-config name="Week4" host="0.0.0.0" port="8031" doc:name="HTTP Listener Configuration"/>
+    <jms:activemq-connector name="Active_MQ" brokerURL="tcp://localhost:61616" validateConnections="true" doc:name="Active MQ"/>
+    <jms:activemq-connector name="Active_MQ1" brokerURL="tcp://localhost:61616" validateConnections="true" doc:name="Active MQ"/>
+    <flow name="week4Flow">
+        <http:listener config-ref="Week4" path="/Hello" doc:name="HTTP"/>
+        <set-payload value="Hello World!" doc:name="Set Payload"/>
+        <set-property propertyName="Bro" value="Dope" doc:name="Property"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="week4Flow1">
+        <http:listener config-ref="Week4" path="/choice" doc:name="HTTP"/>
+        <set-variable variableName="lang" value="#[message.inboundProperties.'http.query.params'.['lang']]" doc:name="Variable"/>
+        <choice doc:name="Choice">
+            <when expression="flowVars.lang=='en'">
+                <set-payload value="&quot;Hello Waddup?&quot;" doc:name="Set Payload"/>
+            </when>
+            <when expression=" flowVars.lang=='ch'">
+                <set-payload value="&quot;Hello from the other side!!" doc:name="Set Payload"/>
+            </when>
+            <otherwise>
+                <set-payload value="&quot;Helloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo shubham!!!!&quot;" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="week4Flow2">
+        <jms:inbound-endpoint queue="JCG_QUEUE" connector-ref="Active_MQ" doc:name="JMS"/>
+        <file:outbound-endpoint path="D:\Destination" responseTimeout="10000" doc:name="File"/>
+    </flow>
+</mule>

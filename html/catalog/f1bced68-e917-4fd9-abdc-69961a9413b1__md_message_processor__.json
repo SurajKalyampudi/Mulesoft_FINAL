@@ -1,0 +1,16 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "fixtures_json"
+        }
+    },
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "fixtures_needed"
+        }
+    },
+    "id": "f1bced68-e917-4fd9-abdc-69961a9413b1",
+    "version": "5.2.0.0"
+}

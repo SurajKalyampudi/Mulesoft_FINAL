@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cluster="http://www.mulesoft.org/schema/mule/ee/cluster" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <configuration defaultExceptionStrategy-ref="DefaultCustomException" doc:name="Configuration">
+        <http:config useTransportForUris="false"/>
+    </configuration>
+<choice-exception-strategy name="CustomChoiceExceptionStrategy">
+            <catch-exception-strategy  when="#[exception.causeMatches('com.mulesoft.weave.*')]" doc:name="MyCustomException">
+                <set-payload value="Destination not found +&quot;/n&quot;+ #[exception]" doc:name="Set Payload"/>
+                <set-property propertyName="http.status" value="500" doc:name="Property"/>
+                <logger message="#[exception]" level="INFO" doc:name="Logger"/>
+            </catch-exception-strategy>
+            <catch-exception-strategy doc:name="restconsumptionsCatch_Exception_Strategy">
+                <set-payload value="data unavailable +&quot;\n&quot;+#[exception]" doc:name="Set Payload"/>
+                <set-property doc:name="Property" propertyName="http.status" value="500"/>
+            </catch-exception-strategy>
+        </choice-exception-strategy>
+    <catch-exception-strategy name="DefaultCustomException">
+        <set-payload value="&quot;Bruh Somethings wrong&quot;
+#[exception]" doc:name="Set Payload"/>
+        <set-property propertyName="http.status" value="500" doc:name="Property"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </catch-exception-strategy>
+
+</mule>
